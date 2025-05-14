@@ -1,0 +1,35 @@
+import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { authApi } from '../services/api/auth'; // make sure this matches your import
+import Loader from '../components/Loader';
+
+const ProtectedRoute = ({ element }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // null: still checking
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        const user = await authApi.getUser(); // 🍪 Uses cookie
+        if (user) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    verifyUser();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return <Loader />; // Still verifying
+  }
+
+  return isAuthenticated ? element : <Navigate to="/" replace />;
+};
+
+export default ProtectedRoute;
+

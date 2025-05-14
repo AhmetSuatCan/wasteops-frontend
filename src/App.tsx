@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import './App.css'
+import AuthForm from './layouts/auth'
 
 function App() {
 
   return (
     <>
+    <AuthForm/>
     </>
   )
 }
