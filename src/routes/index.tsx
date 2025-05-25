@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import Dashboard from "../layouts/dashboard/Index.tsx"
+import Dashboard from "../layouts/dashboard/Index";
 import AuthForm from "../layouts/auth";
 import ProtectedRoute from "./ProtectedRoute.tsx";
+import Facilities from '../pages/facilities';
 
 const router = createBrowserRouter([
     // Auth Layout
@@ -12,12 +13,15 @@ const router = createBrowserRouter([
     // Dashboard Layout
     {
         path: "/dashboard",
-        element: <ProtectedRoute element={<Dashboard />} />
+        element: <ProtectedRoute element={<Dashboard />} />,
+        children: [
+            {
+                index: true,
+                element: <Facilities />
+            }
+        ]
     }
-    ,
-    // Not Found Page
-])
+]);
 
-
-export default router
+export default router;
 

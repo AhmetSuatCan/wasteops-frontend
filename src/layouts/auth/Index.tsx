@@ -7,27 +7,25 @@ export default function AuthForm() {
 
   return (
     <div className="flex-col flex items-center justify-center min-h-screen bg-gray-100">
-    <p className="text-5xl mb-12 text-blue-800">WasteOps</p>
+      <p className="text-5xl mb-12 text-brandGreen">WasteOps</p>
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
         {/* Segmented Picker */}
         <div className="flex mb-6 bg-gray-200 p-1 rounded-full">
           <button
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-              isLogin
-                ? "bg-white shadow text-blue-600"
-                : "text-gray-600 hover:text-blue-600"
-            }`}
+            className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${isLogin
+              ? "bg-white shadow text-brandGreen"
+              : "text-gray-600 hover:text-brandGreen"
+              }`}
           >
             Login
           </button>
           <button
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-              !isLogin
-                ? "bg-white shadow text-blue-600"
-                : "text-gray-600 hover:text-blue-600"
-            }`}
+            className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${!isLogin
+              ? "bg-white shadow text-brandGreen"
+              : "text-gray-600 hover:text-brandGreen"
+              }`}
           >
             Register
           </button>
@@ -103,7 +101,7 @@ export default function AuthForm() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+            className="w-full bg-brandGreen text-white p-2 rounded hover:bg-brandGreen/90"
           >
             {isLogin ? "Login" : "Register"}
           </button>

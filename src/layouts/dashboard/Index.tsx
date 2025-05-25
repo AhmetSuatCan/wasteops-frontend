@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import SideNavigation from "../../components/SideNavigation";
+import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -54,6 +55,7 @@ const Dashboard = () => {
                 </div>
             )}
             <section className="flex relative">
+                <Header />
                 <SideNavigation onToggle={handleToggle} />
                 <main
                     className={`flex flex-col w-full mt-16 transition-all duration-300 max-md:ml-4
