@@ -1,10 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactElement } from 'react';
 import { Navigate } from 'react-router-dom';
 import { authApi } from '../services/api/auth'; // make sure this matches your import
 import Loader from '../components/Loader';
+import OrganizationCheck from '../components/OrganizationCheck';
 
-const ProtectedRoute = ({ element }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null); // null: still checking
+interface ProtectedRouteProps {
+  element: ReactElement;
+}
+
+const ProtectedRoute = ({ element }: ProtectedRouteProps) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // null: still checking
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -28,7 +33,16 @@ const ProtectedRoute = ({ element }) => {
     return <Loader />; // Still verifying
   }
 
-  return isAuthenticated ? element : <Navigate to="/" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  return (
+    <>
+      <OrganizationCheck />
+      {element}
+    </>
+  );
 };
 
 export default ProtectedRoute;

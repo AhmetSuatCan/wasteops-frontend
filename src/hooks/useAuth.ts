@@ -1,8 +1,9 @@
 // hooks/useAuth.ts
 import { useForm } from "react-hook-form";
-import { authApi, RegisterData } from "../services/api/auth";
+import { RegisterData } from "../services/api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuthStore } from "../store/userStore";
 
 interface AuthFormInputs extends RegisterData {
   password: string;
@@ -11,7 +12,8 @@ interface AuthFormInputs extends RegisterData {
 export function useAuth(isLogin: boolean) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { login, register: registerUser } = useAuthStore();
 
   const {
     register,
@@ -25,15 +27,14 @@ export function useAuth(isLogin: boolean) {
     setErrorMessage(null);
     try {
       if (isLogin) {
-        const result = await authApi.login(data.email, data.password);
-        navigate("/dashboard")
-        console.log("Login successful:", result);
+        await login(data.email, data.password);
+        navigate("/dashboard");
       } else {
-        const result = await authApi.register(data);
-        console.log("Registration successful:", result);
+        await registerUser(data);
+        navigate("/dashboard");
       }
       reset();
-    } catch (error : any) {
+    } catch (error: any) {
       console.error("Auth error:", error);
       setErrorMessage(
         error.response?.data?.detail || "Authentication failed."

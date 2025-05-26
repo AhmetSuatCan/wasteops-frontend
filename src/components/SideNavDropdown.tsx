@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IconType } from 'react-icons';
@@ -13,6 +13,8 @@ interface SideNavDropdownProps {
 
 const SideNavDropdown = ({ title, path, icon: Icon, children, onToggle }: SideNavDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
+    const isActive = location.pathname === path || (children && children.some(child => child.path === location.pathname));
 
     const handleClick = () => {
         if (children) {
@@ -23,7 +25,8 @@ const SideNavDropdown = ({ title, path, icon: Icon, children, onToggle }: SideNa
     return (
         <div className="w-full pt-4">
             <div
-                className="flex items-center justify-between px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+                className={`flex items-center justify-between px-6 py-3 cursor-pointer transition-colors duration-200
+                ${isActive ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
                 onClick={handleClick}
             >
                 <Link
@@ -48,11 +51,13 @@ const SideNavDropdown = ({ title, path, icon: Icon, children, onToggle }: SideNa
                 <div className="pl-12">
                     {children.map((child, index) => {
                         const ChildIcon = child.icon;
+                        const isChildActive = location.pathname === child.path;
                         return (
                             <Link
                                 key={index}
                                 to={child.path}
-                                className="block py-3 px-6 hover:bg-gray-100 text-base text-gray-600 transition-colors duration-200 flex items-center gap-3"
+                                className={`block py-3 px-6 text-base text-gray-600 transition-colors duration-200 flex items-center gap-3
+                                ${isChildActive ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
                             >
                                 <ChildIcon className="text-lg text-gray-500" />
                                 {child.title}

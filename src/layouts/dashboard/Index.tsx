@@ -49,18 +49,18 @@ const Dashboard = () => {
 
     return (
         <>
-            {loading && (
-                <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-                </div>
-            )}
             <section className="flex relative">
                 <Header />
                 <SideNavigation onToggle={handleToggle} />
                 <main
-                    className={`flex flex-col w-full mt-16 transition-all duration-300 max-md:ml-4
+                    className={`flex flex-col w-full mt-16 transition-all duration-300 max-md:ml-4 relative
                     ${isSideNavMinimized ? 'ml-4' : 'ml-[20%] max-lg:ml-[25%]'}`}
                 >
+                    {loading && (
+                        <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+                        </div>
+                    )}
                     <ToastContainer />
                     <Outlet context={{ setLoading }} />
                 </main>

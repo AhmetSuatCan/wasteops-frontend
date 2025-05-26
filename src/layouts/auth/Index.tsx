@@ -1,9 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { useAuthStore } from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
-  const { register, handleSubmit, onSubmit, errors } = useAuth(isLogin);
+  const { register, handleSubmit, onSubmit, errors, loading, errorMessage } = useAuth(isLogin);
+  const { checkAuth, isAuthenticated, isLoading } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const isAuth = await checkAuth();
+      if (isAuth) {
+        // If user has no organization, redirect to organization creation/join
+        const { organization } = useAuthStore.getState();
+        if (!organization) {
+          navigate("/create-organization");
+        } else {
+          navigate("/dashboard");
+        }
+      }
+    };
+    checkAuthentication();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brandGreen"></div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return null; // This will be replaced by the redirect in useEffect
+  }
 
   return (
     <div className="flex-col flex items-center justify-center min-h-screen bg-gray-100">
@@ -30,6 +62,13 @@ export default function AuthForm() {
             Register
           </button>
         </div>
+
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {errorMessage}
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -101,9 +140,11 @@ export default function AuthForm() {
 
           <button
             type="submit"
-            className="w-full bg-brandGreen text-white p-2 rounded hover:bg-brandGreen/90"
+            disabled={loading}
+            className={`w-full bg-brandGreen text-white p-2 rounded hover:bg-brandGreen/90 ${loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
-            {isLogin ? "Login" : "Register"}
+            {loading ? "Loading..." : isLogin ? "Login" : "Register"}
           </button>
         </form>
       </div>
