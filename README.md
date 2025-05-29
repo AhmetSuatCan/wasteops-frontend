@@ -2,6 +2,7 @@
 
 This is the frontend web client for the **WasteOps** project — a platform designed to streamline waste management operations and resource planning.
 
+
 ## 🚧 Status
 
 > This project is currently **in progress**. Expect frequent changes and improvements.
