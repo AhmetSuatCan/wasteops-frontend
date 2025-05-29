@@ -85,10 +85,18 @@ const JoiningCode: React.FC = () => {
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, px: { xs: 2, sm: 4, md: 6 } }}>
-            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h4" component="h1">
+            <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h1 style={{
+                    fontSize: '28px',
+                    fontWeight: '600',
+                    color: '#1a1a1a',
+                    margin: 0,
+                    padding: '8px 0',
+                    borderBottom: '3px solid #169976',
+                    display: 'inline-block'
+                }}>
                     Katılım Kodları
-                </Typography>
+                </h1>
                 <Button
                     variant="contained"
                     onClick={handleGenerateCode}
@@ -104,7 +112,7 @@ const JoiningCode: React.FC = () => {
                 >
                     Yeni Kod Oluştur
                 </Button>
-            </Box>
+            </div>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {codes.map((code) => (

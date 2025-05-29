@@ -34,6 +34,10 @@ export const mapApi = {
         const response = await api.get('/routes/');
         return response.data;
     },
+    getRoute: async (id: string) => {
+        const response = await api.get(`/routes/${id}/`);
+        return response.data;
+    },
     createContainer: async (data: {
         name: string;
         address: string;

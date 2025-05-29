@@ -133,7 +133,7 @@ export const Facilities: React.FC = () => {
                     borderBottom: '3px solid #169976',
                     display: 'inline-block'
                 }}>
-                    Facilities Management
+                    Tesis Yönetimi
                 </h1>
                 <Button
                     type="primary"
@@ -151,7 +151,7 @@ export const Facilities: React.FC = () => {
                         marginRight: '16px'
                     }}
                 >
-                    Add Facility
+                    Tesis Ekle
                 </Button>
             </div>
 

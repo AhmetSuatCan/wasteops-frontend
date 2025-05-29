@@ -19,17 +19,17 @@ export const sideNavItems: SideNavItem[] = [
 
     {
         title: "Operasyonlar",
-        path: "/operasyonlar",
+        path: "dashboard/operasyonlar",
         icon: BsCalendarCheck,
         children: [
             {
                 title: "Vardiyalar",
-                path: "/operasyonlar/vardiyalar",
+                path: "/dashboard/operasyonlar/vardiyalar",
                 icon: BsCalendarCheck
             },
             {
                 title: "Ekipler",
-                path: "/operasyonlar/ekipleri",
+                path: "/dashboard/operasyonlar/ekipler",
                 icon: BsPeople
             }
         ]
@@ -63,7 +63,7 @@ export const sideNavItems: SideNavItem[] = [
     },
     {
         title: "Harita",
-        path: "/harita",
+        path: "/dashboard/harita",
         icon: RiMapLine
     }
 ]; 

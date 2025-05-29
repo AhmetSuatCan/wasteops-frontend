@@ -1,22 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useEmployment } from '../hooks/useEmployment';
-import {
-    Box,
-    Card,
-    CardContent,
-    Typography,
-    Button,
-    Stack,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    CircularProgress,
-    Alert,
-    Container,
-    IconButton
-} from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Table, Button, Modal, Typography, Alert, Space } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
 
@@ -40,7 +25,7 @@ interface Employee {
 const Employment: React.FC = () => {
     const { employees, loading, error, fetchEmployees, terminateEmployment } = useEmployment();
     const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     useEffect(() => {
         fetchEmployees();
@@ -48,180 +33,154 @@ const Employment: React.FC = () => {
 
     const handleTerminateClick = (employee: Employee) => {
         setSelectedEmployee(employee);
-        setIsConfirmDialogOpen(true);
+        setIsConfirmModalOpen(true);
     };
 
     const handleConfirmTermination = async () => {
         if (selectedEmployee) {
             await terminateEmployment(selectedEmployee.user.id);
-            setIsConfirmDialogOpen(false);
+            setIsConfirmModalOpen(false);
             setSelectedEmployee(null);
         }
     };
 
+    const columns = [
+        {
+            title: 'Çalışan Adı',
+            dataIndex: ['user', 'name'],
+            key: 'name',
+            render: (text: string) => (
+                <Typography.Text strong style={{ color: '#169976', fontSize: '16px' }}>
+                    {text}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: 'Email',
+            dataIndex: ['user', 'email'],
+            key: 'email',
+            render: (text: string) => (
+                <Typography.Text style={{ fontSize: '16px' }}>
+                    {text}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: 'Telefon',
+            dataIndex: ['user', 'phone_number'],
+            key: 'phone',
+            render: (text: string) => (
+                <Typography.Text style={{ fontSize: '16px' }}>
+                    {text}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: 'Başlangıç Tarihi',
+            dataIndex: 'start_date',
+            key: 'start_date',
+            render: (date: string) => (
+                <Typography.Text style={{ fontSize: '16px' }}>
+                    {format(new Date(date), 'dd MMMM yyyy', { locale: tr })}
+                </Typography.Text>
+            ),
+        },
+        {
+            title: 'İşlemler',
+            key: 'actions',
+            render: (_: any, record: Employee) => (
+                <Space>
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<LogoutOutlined />}
+                        onClick={() => handleTerminateClick(record)}
+                        size="large"
+                    >
+                        Çıkış
+                    </Button>
+                </Space>
+            ),
+        },
+    ];
+
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, px: { xs: 2, sm: 4, md: 6 } }}>
-            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h4" component="h1">
-                    Çalışan Yönetimi
-                </Typography>
-            </Box>
+        <div style={{ width: '100%', padding: '2rem' }}>
+            <Typography.Title
+                level={2}
+                style={{
+                    marginBottom: '2rem',
+                    borderBottom: '3px solid #169976',
+                    paddingBottom: '0.5rem',
+                    display: 'inline-block',
+                }}
+            >
+                Çalışan Yönetimi
+            </Typography.Title>
 
             {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {error}
-                </Alert>
+                <Alert
+                    message="Hata"
+                    description={error}
+                    type="error"
+                    showIcon
+                    style={{ marginBottom: '1rem' }}
+                />
             )}
 
-            {loading ? (
-                <Box display="flex" justifyContent="center" p={3}>
-                    <CircularProgress />
-                </Box>
-            ) : employees.length === 0 ? (
-                <Card
-                    sx={{
-                        py: 4,
-                        px: 3,
-                        textAlign: 'center',
-                        border: '3px solid #169976',
-                        bgcolor: '#ffffff',
-                        borderRadius: 3,
-                    }}
-                >
-                    <Typography
-                        variant="h5"
-                        sx={{
-                            color: '#666',
-                            fontWeight: 500
-                        }}
-                    >
-                        Hiç Çalışan Yok
-                    </Typography>
-                </Card>
-            ) : (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    {employees.map((employee) => (
-                        <Card
-                            key={employee.id}
-                            sx={{
-                                py: 2.5,
-                                px: 2.5,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                border: '3px solid #169976',
-                                bgcolor: '#ffffff',
-                                borderRadius: 3,
-                                '&:hover': {
-                                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                                    transform: 'translateY(-2px)',
-                                    transition: 'all 0.2s ease-in-out',
-                                    bgcolor: '#fafafa'
-                                }
-                            }}
-                        >
-                            <Box sx={{ flex: 1 }}>
-                                <Typography
-                                    variant="h5"
-                                    component="div"
-                                    sx={{
-                                        mb: 1,
-                                        color: '#169976',
-                                        fontWeight: 700,
-                                        letterSpacing: '0.5px'
-                                    }}
-                                >
-                                    {employee.user.name}
-                                </Typography>
-                                <Stack spacing={1}>
-                                    <Typography
-                                        variant="body1"
-                                        color="text.secondary"
-                                        sx={{
-                                            fontWeight: 500,
-                                            color: '#666'
-                                        }}
-                                    >
-                                        Email: {employee.user.email}
-                                    </Typography>
-                                    <Typography
-                                        variant="body1"
-                                        color="text.secondary"
-                                        sx={{
-                                            fontWeight: 500,
-                                            color: '#666'
-                                        }}
-                                    >
-                                        Telefon: {employee.user.phone_number}
-                                    </Typography>
-                                    <Typography
-                                        variant="body1"
-                                        color="text.secondary"
-                                        sx={{
-                                            fontWeight: 500,
-                                            color: '#666'
-                                        }}
-                                    >
-                                        Başlangıç: {format(new Date(employee.start_date), 'dd MMMM yyyy', { locale: tr })}
-                                    </Typography>
-                                </Stack>
-                            </Box>
-                            <Box>
-                                <Button
-                                    onClick={() => handleTerminateClick(employee)}
-                                    variant="outlined"
-                                    color="error"
-                                    startIcon={<LogoutIcon />}
-                                    size="large"
-                                    sx={{
-                                        borderColor: '#d32f2f',
-                                        color: '#d32f2f',
-                                        px: 3,
-                                        py: 1.5,
-                                        fontSize: '1rem',
-                                        '&:hover': {
-                                            borderColor: '#b71c1c',
-                                            backgroundColor: 'rgba(211, 47, 47, 0.1)'
-                                        }
-                                    }}
-                                >
-                                    Çıkış
-                                </Button>
-                            </Box>
-                        </Card>
-                    ))}
-                </Box>
-            )}
+            <Table
+                columns={columns}
+                dataSource={employees}
+                loading={loading}
+                rowKey="id"
+                pagination={{
+                    pageSize: 10,
+                    showSizeChanger: false,
+                    showTotal: (total) => `Toplam ${total} çalışan`,
+                }}
+                locale={{
+                    emptyText: 'Hiç çalışan yok',
+                }}
+                style={{
+                    backgroundColor: '#fafafa',
+                    borderRadius: '8px',
+                }}
+                className="custom-table"
+            />
 
-            <Dialog
-                open={isConfirmDialogOpen}
-                onClose={() => setIsConfirmDialogOpen(false)}
+            <style>
+                {`
+                    .custom-table .ant-table-thead > tr > th {
+                        background-color: #f5f5f5;
+                        font-size: 16px;
+                        font-weight: 600;
+                        padding: 16px;
+                    }
+                    .custom-table .ant-table-tbody > tr > td {
+                        padding: 16px;
+                        background-color: #ffffff;
+                    }
+                    .custom-table .ant-table-tbody > tr:hover > td {
+                        background-color: #f0f9f4 !important;
+                    }
+                `}
+            </style>
+
+            <Modal
+                title="Çalışanı Çıkar"
+                open={isConfirmModalOpen}
+                onOk={handleConfirmTermination}
+                onCancel={() => setIsConfirmModalOpen(false)}
+                okText="Çalışanı Çıkar"
+                cancelText="İptal"
+                okButtonProps={{ danger: true }}
             >
-                <DialogTitle>Çalışanı Çıkar</DialogTitle>
-                <DialogContent>
-                    <Typography>
-                        {selectedEmployee ? selectedEmployee.user.name : ''} isimli çalışanı çıkarmak istediğinizden emin misiniz?
-                        Bu işlem geri alınamaz.
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setIsConfirmDialogOpen(false)}>İptal</Button>
-                    <Button
-                        onClick={handleConfirmTermination}
-                        color="primary"
-                        variant="contained"
-                        sx={{
-                            bgcolor: '#169976',
-                            '&:hover': {
-                                bgcolor: '#138066'
-                            }
-                        }}
-                    >
-                        Çalışanı Çıkar
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+                <Typography.Paragraph>
+                    {selectedEmployee ? selectedEmployee.user.name : ''} isimli çalışanı çıkarmak istediğinizden emin misiniz?
+                    Bu işlem geri alınamaz.
+                </Typography.Paragraph>
+            </Modal>
+        </div>
     );
 };
 

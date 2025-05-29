@@ -90,7 +90,7 @@ const Map = () => {
                                 : 'bg-white text-gray-700 hover:bg-gray-50'
                                 }`}
                         >
-                            Create Container
+                            Konteyner Oluştur
                         </button>
                         <button
                             onClick={() => setMode('route')}
@@ -99,7 +99,7 @@ const Map = () => {
                                 : 'bg-white text-gray-700 hover:bg-gray-50'
                                 }`}
                         >
-                            View Route
+                            Rota Görüntüle
                         </button>
                         <button
                             onClick={() => setMode('route-creation')}
@@ -108,7 +108,7 @@ const Map = () => {
                                 : 'bg-white text-gray-700 hover:bg-gray-50'
                                 }`}
                         >
-                            Create Route
+                            Rota Oluştur
                         </button>
                     </div>
                 </div>
@@ -118,14 +118,14 @@ const Map = () => {
                     <div className="col-span-3 h-full">
                         <div className="bg-gray-50 rounded-lg p-4 h-full overflow-y-auto">
                             <h2 className="text-lg font-semibold mb-4">
-                                {mode === 'normal' && 'Containers'}
-                                {mode === 'container-creation' && 'Create Container'}
-                                {mode === 'route' && 'Routes'}
-                                {mode === 'route-creation' && 'Create Route'}
+                                {mode === 'normal' && 'Konteynerler'}
+                                {mode === 'container-creation' && 'Konteyner Oluştur'}
+                                {mode === 'route' && 'Rotalar'}
+                                {mode === 'route-creation' && 'Rota Oluştur'}
                             </h2>
 
                             {mode === 'normal' && (
-                                <div className="space-y-4">
+                                <div className="space-y-4 max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
                                     {containers.map(container => (
                                         <div
                                             key={container.id}
@@ -139,12 +139,12 @@ const Map = () => {
                             )}
 
                             {mode === 'container-creation' && (
-                                <div className="space-y-4">
+                                <div className="space-y-4 max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
                                     <div className="bg-white p-4 rounded-lg shadow-sm">
                                         <h3 className="font-medium mb-4">New Container Details</h3>
                                         <div className="space-y-4">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700">Name</label>
+                                                <label className="block text-sm font-medium text-gray-700">İsim</label>
                                                 <input
                                                     type="text"
                                                     value={newContainerName}
@@ -153,7 +153,7 @@ const Map = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700">Address</label>
+                                                <label className="block text-sm font-medium text-gray-700">Adres</label>
                                                 <input
                                                     type="text"
                                                     value={newContainerAddress}
@@ -163,9 +163,9 @@ const Map = () => {
                                             </div>
                                             {pendingLocation && (
                                                 <div className="text-sm text-gray-600">
-                                                    Selected location:<br />
-                                                    Lat: {Number(pendingLocation.lat).toFixed(6)}<br />
-                                                    Lng: {Number(pendingLocation.lng).toFixed(6)}
+                                                    Seçilen konum:<br />
+                                                    Enlem: {Number(pendingLocation.lat).toFixed(6)}<br />
+                                                    Boylam: {Number(pendingLocation.lng).toFixed(6)}
                                                 </div>
                                             )}
                                             <button
@@ -173,18 +173,18 @@ const Map = () => {
                                                 disabled={!pendingLocation || !newContainerName || !newContainerAddress}
                                                 className="w-full px-6 py-3 text-base font-medium bg-[#169976] text-white rounded-md hover:bg-[#138066] disabled:bg-gray-400 disabled:cursor-not-allowed"
                                             >
-                                                Create Container
+                                                Konteyner Oluştur
                                             </button>
                                         </div>
                                     </div>
                                     <div className="text-sm text-gray-600">
-                                        Click on the map to select a location for the new container.
+                                        Yeni konteyner için haritada bir konum seçin.
                                     </div>
                                 </div>
                             )}
 
                             {mode === 'route' && (
-                                <div className="space-y-4">
+                                <div className="space-y-4 max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
                                     {routes.map(route => (
                                         <div
                                             key={route.id}
@@ -196,7 +196,7 @@ const Map = () => {
                                         >
                                             <h3 className="font-medium">{route.name}</h3>
                                             <p className="text-sm text-gray-600">
-                                                {route.nodes.length} containers
+                                                {route.nodes.length} konteyner
                                             </p>
                                         </div>
                                     ))}
@@ -204,10 +204,10 @@ const Map = () => {
                             )}
 
                             {mode === 'route-creation' && (
-                                <div className="space-y-4">
+                                <div className="space-y-4 max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
                                     <button
                                         onClick={async () => {
-                                            const routeName = prompt('Enter route name:');
+                                            const routeName = prompt('Rota adını girin:');
                                             if (routeName) {
                                                 try {
                                                     // First create the route
@@ -225,12 +225,12 @@ const Map = () => {
                                         disabled={selectedContainers.length === 0}
                                         className="w-full px-6 py-3 text-base font-medium bg-[#169976] text-white rounded-md hover:bg-[#138066] disabled:bg-gray-400 disabled:cursor-not-allowed"
                                     >
-                                        Save Route
+                                        Rotayı Kaydet
                                     </button>
                                     <div className="text-sm text-gray-600 mb-4">
                                         {selectedContainers.length === 0
-                                            ? 'Select containers to create a route'
-                                            : `Selected ${selectedContainers.length} containers`}
+                                            ? 'Rota oluşturmak için konteyner seçin'
+                                            : `${selectedContainers.length} konteyner seçildi`}
                                     </div>
                                     <div className="space-y-2">
                                         {containers.map(container => (

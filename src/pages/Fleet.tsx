@@ -127,7 +127,7 @@ export const Fleet: React.FC = () => {
                     borderBottom: '3px solid #169976',
                     display: 'inline-block'
                 }}>
-                    Fleet Management
+                    Filo Yönetimi
                 </h1>
                 <Button
                     type="primary"
@@ -145,7 +145,7 @@ export const Fleet: React.FC = () => {
                         marginRight: '16px'
                     }}
                 >
-                    Add Truck
+                    Araç Ekle
                 </Button>
             </div>
 
