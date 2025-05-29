@@ -1,60 +1,250 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Button, Modal, Form, Input, Select, InputNumber, Table, Space, message } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useFacility, CreateFacilityData, Facility } from '../hooks/useFacility';
 
-export const Facilities = () => {
-    const exampleFacilities = [
-        { id: 1, name: 'Main Recycling Center', location: 'New York', status: 'Active' },
-        { id: 2, name: 'Westside Processing', location: 'Los Angeles', status: 'Active' },
-        { id: 3, name: 'East Coast Facility', location: 'Boston', status: 'Maintenance' },
+export const Facilities: React.FC = () => {
+    const { facilities, loading, error, fetchFacilities, createFacility, updateFacility, deleteFacility } = useFacility();
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [editingFacility, setEditingFacility] = useState<Facility | null>(null);
+    const [form] = Form.useForm();
+
+    useEffect(() => {
+        fetchFacilities();
+    }, []);
+
+    const handleCreateFacility = async () => {
+        try {
+            const values = await form.validateFields();
+            await createFacility(values);
+            setIsModalVisible(false);
+            form.resetFields();
+            message.success('Facility created successfully');
+        } catch (error) {
+            console.error('Create failed:', error);
+            message.error('Failed to create facility');
+        }
+    };
+
+    const handleEditFacility = async (id: string, data: CreateFacilityData) => {
+        try {
+            await updateFacility(id, data);
+            setEditingFacility(null);
+            message.success('Facility updated successfully');
+        } catch (error) {
+            console.error('Update failed:', error);
+            message.error('Failed to update facility');
+        }
+    };
+
+    const handleDeleteFacility = async (id: string) => {
+        try {
+            await deleteFacility(id);
+            await fetchFacilities();
+            message.success('Facility deleted successfully');
+        } catch (error) {
+            console.error('Delete failed:', error);
+            message.error('Failed to delete facility');
+        }
+    };
+
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            sorter: (a: Facility, b: Facility) => a.name.localeCompare(b.name),
+            render: (text: string) => <span style={{ fontSize: '16px' }}>{text}</span>
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+            sorter: (a: Facility, b: Facility) => a.address.localeCompare(b.address),
+            render: (text: string) => <span style={{ fontSize: '16px' }}>{text}</span>
+        },
+        {
+            title: 'Type',
+            dataIndex: 'facility_type',
+            key: 'facility_type',
+            sorter: (a: Facility, b: Facility) => a.facility_type.localeCompare(b.facility_type),
+            render: (text: string) => <span style={{ fontSize: '16px' }}>{text}</span>
+        },
+        {
+            title: 'Capacity',
+            dataIndex: 'capacity',
+            key: 'capacity',
+            sorter: (a: Facility, b: Facility) => a.capacity - b.capacity,
+            render: (text: number) => <span style={{ fontSize: '16px' }}>{text}</span>
+        },
+        {
+            title: 'Contact Info',
+            dataIndex: 'contact_info',
+            key: 'contact_info',
+            render: (text: string) => <span style={{ fontSize: '16px' }}>{text || '-'}</span>
+        },
+        {
+            title: 'Operating Hours',
+            dataIndex: 'operating_hours',
+            key: 'operating_hours',
+            render: (text: string) => <span style={{ fontSize: '16px' }}>{text || '-'}</span>
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (_: any, record: Facility) => (
+                <Space>
+                    <Button
+                        type="primary"
+                        icon={<EditOutlined />}
+                        onClick={() => {
+                            setEditingFacility(record);
+                            form.setFieldsValue(record);
+                        }}
+                        style={{ backgroundColor: '#169976', borderColor: '#169976' }}
+                    >
+                        Edit
+                    </Button>
+                    <Button
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => handleDeleteFacility(record.id.toString())}
+                    >
+                        Delete
+                    </Button>
+                </Space>
+            ),
+        },
     ];
 
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
     return (
-        <div className="p-6">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-800">Facilities</h1>
-                <p className="text-gray-600 mt-2">Manage and monitor your waste management facilities</p>
+        <div style={{ padding: '40px 24px 24px 24px' }}>
+            <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h1 style={{
+                    fontSize: '28px',
+                    fontWeight: '600',
+                    color: '#1a1a1a',
+                    margin: 0,
+                    padding: '8px 0',
+                    borderBottom: '3px solid #169976',
+                    display: 'inline-block'
+                }}>
+                    Tesis Yönetimi
+                </h1>
+                <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() => {
+                        setEditingFacility(null);
+                        setIsModalVisible(true);
+                    }}
+                    style={{
+                        backgroundColor: '#169976',
+                        borderColor: '#169976',
+                        padding: '8px 24px',
+                        height: 'auto',
+                        fontSize: '16px',
+                        marginRight: '16px'
+                    }}
+                >
+                    Tesis Ekle
+                </Button>
             </div>
 
-            <div className="bg-white rounded-lg shadow">
-                <div className="p-4 border-b">
-                    <h2 className="text-xl font-semibold">Facility List</h2>
-                </div>
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {exampleFacilities.map((facility) => (
-                                <tr key={facility.id}>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900">{facility.name}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-500">{facility.location}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            ${facility.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                                            {facility.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <button className="text-blue-600 hover:text-blue-900 mr-3">View</button>
-                                        <button className="text-blue-600 hover:text-blue-900">Edit</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <Table
+                columns={columns}
+                dataSource={facilities}
+                rowKey="id"
+                loading={loading}
+                pagination={{
+                    pageSize: 10,
+                    position: ['bottomCenter'],
+                    style: {
+                        marginTop: '20px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: '100%'
+                    }
+                }}
+                style={{ fontSize: '16px' }}
+                className="custom-table"
+            />
+
+            <Modal
+                title={editingFacility ? "Edit Facility" : "Add New Facility"}
+                open={isModalVisible || !!editingFacility}
+                onOk={async () => {
+                    try {
+                        const values = await form.validateFields();
+                        if (editingFacility) {
+                            await handleEditFacility(editingFacility.id.toString(), values);
+                        } else {
+                            await handleCreateFacility();
+                        }
+                    } catch (error) {
+                        console.error('Form validation failed:', error);
+                    }
+                }}
+                onCancel={() => {
+                    setIsModalVisible(false);
+                    setEditingFacility(null);
+                    form.resetFields();
+                }}
+                okButtonProps={{ style: { backgroundColor: '#169976', borderColor: '#169976' } }}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                >
+                    <Form.Item
+                        name="name"
+                        label="Name"
+                        rules={[{ required: true }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="address"
+                        label="Address"
+                        rules={[{ required: true }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="facility_type"
+                        label="Facility Type"
+                        rules={[{ required: true }]}
+                    >
+                        <Select>
+                            <Select.Option value="recycling">Recycling</Select.Option>
+                            <Select.Option value="treatment">Treatment</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="capacity"
+                        label="Capacity"
+                        rules={[{ required: true }]}
+                    >
+                        <InputNumber min={1} style={{ width: '100%' }} />
+                    </Form.Item>
+                    <Form.Item
+                        name="contact_info"
+                        label="Contact Info"
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="operating_hours"
+                        label="Operating Hours"
+                    >
+                        <Input />
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
     );
 };
-
-export default Facilities;

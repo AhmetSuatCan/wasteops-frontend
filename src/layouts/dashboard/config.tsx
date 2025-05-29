@@ -1,4 +1,4 @@
-import { RiDashboardLine, RiMapLine } from 'react-icons/ri';
+import { RiDashboardLine, RiMapLine, RiBuildingLine } from 'react-icons/ri';
 import { BsTruck, BsPeople, BsCalendarCheck, BsPersonLinesFill } from 'react-icons/bs';
 import { MdOutlineInventory, MdDirectionsCar } from 'react-icons/md';
 import { IconType } from 'react-icons';
@@ -13,22 +13,23 @@ interface SideNavItem {
 export const sideNavItems: SideNavItem[] = [
     {
         title: "Anasayfa",
-        path: "/anasayfa",
+        path: "/dashboard",
         icon: RiDashboardLine
     },
+
     {
         title: "Operasyonlar",
-        path: "/operasyonlar",
+        path: "dashboard/operasyonlar",
         icon: BsCalendarCheck,
         children: [
             {
                 title: "Vardiyalar",
-                path: "/operasyonlar/vardiyalar",
+                path: "/dashboard/operasyonlar/vardiyalar",
                 icon: BsCalendarCheck
             },
             {
                 title: "Ekipler",
-                path: "/operasyonlar/ekipleri",
+                path: "/dashboard/operasyonlar/ekipler",
                 icon: BsPeople
             }
         ]
@@ -40,24 +41,29 @@ export const sideNavItems: SideNavItem[] = [
         children: [
             {
                 title: "Katılım Kodları",
-                path: "/insan-kaynaklari/katilim-kodlari",
+                path: "/dashboard/insan-kaynaklari/kodlar",
                 icon: BsPersonLinesFill
             },
             {
                 title: "Çalışanlar",
-                path: "/insan-kaynaklari/calisanlar",
+                path: "/dashboard/insan-kaynaklari/calisanlar",
                 icon: BsPeople
             }
         ]
     },
     {
+        title: "Tesisler",
+        path: "/dashboard/tesisler",
+        icon: RiBuildingLine
+    },
+    {
         title: "Filo",
-        path: "/filo",
+        path: "/dashboard/filo",
         icon: MdDirectionsCar
     },
     {
         title: "Harita",
-        path: "/harita",
+        path: "/dashboard/harita",
         icon: RiMapLine
     }
 ]; 
