@@ -40,5 +40,9 @@ export const shiftApi = {
         const response = await api.post('/create-shift/', shift);
         return response.data;
     },
+    getShiftsForTeam: async (teamId: string) => {
+        const response = await api.get(`/get-shifts-for-team/${teamId}/`);
+        return response.data;
+    }
 };
 

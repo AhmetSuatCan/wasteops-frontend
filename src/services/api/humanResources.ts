@@ -78,5 +78,14 @@ export const humanResourcesApi = {
             console.error('Error ending employment:', error);
             throw error;
         }
+    },
+    getActiveEmploymentId: async (userId: string, organizationId: string) => {
+        try {
+            const response = await api.get(`/active-employment-id/?user_id=${userId}&organization_id=${organizationId}`);
+            return response.data;
+        } catch (error) {
+            console.error('(API CALL)Error while getting active employment id:', error);
+            throw error;
+        }
     }
 };

@@ -1,8 +1,10 @@
 import { IoIosArrowForward } from "react-icons/io";
 import SideNavDropdown from "./SideNavDropdown";
-import { sideNavItems } from "../layouts/dashboard/config";
+import { adminSideNavItems } from "../layouts/dashboard/config";
+import { employeeSideNavItems } from "../layouts/dashboard/employeeConfig";
 import { memo, useState, useRef } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useAuthStore } from "../store/userStore";
 
 interface SideNavigationProps {
     onToggle: (minimized: boolean) => void;
@@ -12,7 +14,8 @@ const SideNavigation = ({ onToggle }: SideNavigationProps) => {
     const [menuAnimation] = useAutoAnimate();
     const [minimize, setMinimize] = useState(window.innerWidth <= 768);
     const [isHovered, setIsHovered] = useState(false);
-    const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
+    const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const { user } = useAuthStore();
 
     const toggleSideNav = () => {
         setMinimize(!minimize);
@@ -27,6 +30,9 @@ const SideNavigation = ({ onToggle }: SideNavigationProps) => {
     const handleMouseLeave = () => {
         hoverTimeout.current = setTimeout(() => setIsHovered(false), 3000);
     };
+
+    // Select navigation items based on user role
+    const sideNavItems = user?.role === 'A' ? adminSideNavItems : employeeSideNavItems;
 
     return (
         <aside

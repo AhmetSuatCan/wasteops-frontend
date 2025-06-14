@@ -60,7 +60,7 @@ export const useAuthStore = create<AuthState>((set) => ({
                 }
                 // organizationData remains null
             }
-            console.log(organizationData)
+            console.log(`organizationData: ${organizationData.id}`)
 
             set({
                 user: userData,

@@ -10,7 +10,7 @@ interface SideNavItem {
     children?: SideNavItem[];
 }
 
-export const sideNavItems: SideNavItem[] = [
+export const adminSideNavItems: SideNavItem[] = [
     {
         title: "Anasayfa",
         path: "/dashboard",

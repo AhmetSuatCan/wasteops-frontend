@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { authApi } from '../services/api/auth'; // make sure this matches your import
 import Loader from '../components/Loader';
 import OrganizationCheck from '../components/OrganizationCheck';
+import { useAuthStore } from '../store/userStore';
 
 interface ProtectedRouteProps {
   element: ReactElement;
@@ -21,7 +22,7 @@ const ProtectedRoute = ({ element }: ProtectedRouteProps) => {
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error("Auth check failed:", error);
+        console.error("Auth check failed on ProtectedRoute:", error);
         setIsAuthenticated(false);
       }
     };

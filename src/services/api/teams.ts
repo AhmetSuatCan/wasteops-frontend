@@ -72,6 +72,10 @@ export const teamsApi = {
         const response = await api.get(`/team/${id}/members/`);
         return response.data;
     },
+    getActiveTeamId: async (employmentId: string) => {
+        const response = await api.get(`/get-active-team-id/?employment_id=${employmentId}`);
+        return response.data;
+    }
 
 };
 

@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { RegisterData } from "../services/api/auth";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/userStore";
 
 interface AuthFormInputs extends RegisterData {
@@ -13,7 +13,7 @@ export function useAuth(isLogin: boolean) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { login, register: registerUser } = useAuthStore();
+  const { login, register: registerUser, user } = useAuthStore();
 
   const {
     register,
@@ -28,10 +28,18 @@ export function useAuth(isLogin: boolean) {
     try {
       if (isLogin) {
         await login(data.email, data.password);
-        navigate("/dashboard");
+        if (user?.role === 'A') {
+          navigate("/dashboard");
+        } else {
+          navigate("/employee-dashboard");
+        }
       } else {
         await registerUser(data);
-        navigate("/dashboard");
+        if (user?.role === 'A') {
+          navigate("/dashboard");
+        } else {
+          navigate("/employee-dashboard");
+        }
       }
       reset();
     } catch (error: any) {

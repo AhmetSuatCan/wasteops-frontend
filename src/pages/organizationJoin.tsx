@@ -14,7 +14,12 @@ const OrganizationJoin: React.FC = () => {
 
         try {
             await joinOrganization(organizationCode);
-            navigate('/dashboard', { replace: true });
+            // Redirect based on role after joining organization
+            if (user?.role === 'A') {
+                navigate('/dashboard', { replace: true });
+            } else {
+                navigate('/employee-dashboard', { replace: true });
+            }
         } catch (error) {
             console.error('Error joining organization:', error);
         }
